@@ -231,6 +231,25 @@ routerUser.get('/calendario/:id', (req, res) => {
     });
 });
 
+routerUser.post('/reserve_cita', (req, res) => {
+    //const userId = req.params.id;
+    const { userId, date, hour, firstName, surname } = req.body;
+    console.log("uesrId", userId, date, hour, firstName, surname)
+    //const { date, hour } = req.body;
+    const working = `${date} ${hour}`;
+    const insert = "INSERT INTO cita_urgente(id_residente, nombre_res, apellido_res, fecha_cita_urgente, tipo_documento) VALUES(?,?,?,?,?)";
+
+    connection.query(insert, [userId, firstName, surname, working, "DNI"], (error, results) => {
+        if (error) {
+            console.error('Erro ao inserir dados:', error);
+            res.status(500).json({ message: 'Erro ao reservar a cita' });
+            return;
+        }
+        console.log("Dados inseridos:", results);
+        res.json({ message: 'Cita reservada exitosamente' });
+    });
+});
+
 
 // RUTA PARA CERRAR SESIÓN
 routerUser.get('/logout', (req, res) => {
