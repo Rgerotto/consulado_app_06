@@ -234,7 +234,7 @@ routerUser.get('/calendario/:id', (req, res) => {
 routerUser.post('/reserve_cita', (req, res) => {
     //const userId = req.params.id;
     const { userId, date, hour, firstName, surname } = req.body;
-    console.log("uesrId", userId, date, hour, firstName, surname)
+    //console.log("uesrId", userId, date, hour, firstName, surname)
     //const { date, hour } = req.body;
     const working = `${date} ${hour}`;
     const insert = "INSERT INTO cita_urgente(id_residente, nombre_res, apellido_res, fecha_cita_urgente, tipo_documento) VALUES(?,?,?,?,?)";
@@ -246,7 +246,7 @@ routerUser.post('/reserve_cita', (req, res) => {
             return;
         }
         console.log("Dados inseridos:", results);
-        res.json({ message: 'Cita reservada exitosamente' });
+        res.json(`${firstName} ${surname}, la cita estas reservada para el ${date} a las ${hour}`);
     });
 });
 

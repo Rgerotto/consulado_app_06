@@ -24,11 +24,11 @@ function generateWeekdayInputs() {
                 month: 'numeric', 
                 day: 'numeric' 
             });
-
+            
             // Adicionar evento de click para gerar inputs de horas disponíveis
             input.addEventListener('click', (event) => {
-                console.log("Data selecionada:", event.target.value);
-                generateHourInputs(currentDate);
+                const dateFormatted = input.value
+                generateHourInputs(currentDate, dateFormatted);
             });
 
             container.appendChild(input);
@@ -38,7 +38,8 @@ function generateWeekdayInputs() {
 }
 
 // Função para gerar os inputs de horas disponíveis para a data selecionada
-function generateHourInputs(date) {
+function generateHourInputs(date, dateFormatted) {
+   
     const container = document.getElementById('hourInputsContainer');
     container.innerHTML = '';  // Limpar qualquer conteúdo prévio
 
@@ -51,8 +52,9 @@ function generateHourInputs(date) {
         hourInput.type = 'button';
         hourInput.value = hour;
         hourInput.addEventListener('click', (event) => {
-            console.log("Hora selecionada:", event.target.value);
-            createSubmitButton(date, hour);
+            //console.log("hour", hour)
+            //console.log("Hora selecionada:", event.target.value);
+            createSubmitButton(date, hour, dateFormatted);
         });
 
         container.appendChild(hourInput);
@@ -60,7 +62,7 @@ function generateHourInputs(date) {
 }
 
 // Função para criar o botão de submissão do formulário
-function createSubmitButton(date, hour) {
+function createSubmitButton(date, hour, dateFormatted) {
     const formattedDate = date.toLocaleDateString('es-ES', { 
         weekday: 'long', 
         year: 'numeric', 
@@ -68,19 +70,26 @@ function createSubmitButton(date, hour) {
         day: 'numeric' 
     });
 
-    console.log("Criando botão de submissão para Data:", formattedDate, "e Hora:", hour);
+    //console.log("Criando botão de submissão para Data:", dateFormatted, "e Hora:", hour);
 
     // Extrair dia, mês e ano da data formatada
-    const parts = formattedDate.split('/');
+    const parts = dateFormatted.split('/');
+    const daySelect = parts[0].trim();
+    const daySplit = daySelect.split(',')
+    const day = daySplit[1].trim()
+    const month = parts[1].trim().padStart(2, '0');
+    const year = parts[2].trim();
+    const dateDb = `${year}/${month}/${day}`;
+    /* const parts = formattedDate.split('/');
     const daySelect = parts[0].trim();
     const daySplit = daySelect.split(',')
     const day = daySplit[1].trim()
     console.log("teste",day)
     const month = parts[1].trim().padStart(2, '0');
     const year = parts[2].trim();
-    const dateDb = `${year}/${month}/${day}`;
+    const dateDb = `${year}/${month}/${day}`; */
 
-    console.log("Data formatada para submissão:", dateDb);
+    //console.log("Data formatada para submissão:", dateFormatted);
 
     const container = document.getElementById('hourInputsContainer');
     const existingButton = container.querySelector('button[type="submit"]');
@@ -112,7 +121,6 @@ function createSubmitButton(date, hour) {
    const splitName = userName.split(' ');
    const firstName = splitName[1];
    const surname = splitName[2];
-   console.log(surname)
 
    // Adicionar campos ocultos para o id, nome e sobrenome
    const userIdInput = document.createElement('input');
